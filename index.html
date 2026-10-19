@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Little World of Flowers 🌸</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Background Canvas hoa rơi -->
+  <canvas id="petalCanvas"></canvas>
+
+  <!-- Trình phát nhạc nền -->
+  <div class="audio-player-widget">
+    <button id="musicToggleBtn" class="pill-btn music-btn" title="Bật/Tắt nhạc">🎵 <span>Phát nhạc</span></button>
+    <select id="musicSelect" class="pill-select" title="Chọn bản nhạc">
+      <option value="https://actions.google.com/sounds/v1/ambiences/gentle_morning.ogg">Dịu dàng buổi sớm</option>
+      <option value="https://actions.google.com/sounds/v1/relaxing/piano_calm.ogg">Giai điệu Lavender</option>
+      <option value="https://actions.google.com/sounds/v1/weather/soft_spring_rain.ogg">Mưa xuân ngọt ngào</option>
+    </select>
+    <audio id="bgAudio" loop></audio>
+  </div>
+
+  <main class="app-container">
+
+    <!-- MÀN 1: WELCOME -->
+    <section id="screen1" class="screen active">
+      <div class="card glass-card text-center">
+        <div class="flower-badge">🌸 20/10 🌸</div>
+        <h1 class="main-title">A Little World of Flowers</h1>
+        <p class="subtitle">Dành tặng 21 đóa hoa rạng ngời và đặc biệt nhất của lớp chúng mình.</p>
+        <div class="hero-flower-illustration">🌺✨🪻</div>
+        <button id="btnEnterGarden" class="cta-btn">Bước vào khu vườn 🌿</button>
+      </div>
+    </section>
+
+    <!-- MÀN 2: TÌM LỜI CHÚC (CHỈ DÙNG TÊN & SBD) -->
+    <section id="screen2" class="screen">
+      <div class="card glass-card">
+        <h2 class="section-title text-center">Gửi Gắm Yêu Thương</h2>
+        <p class="info-desc text-center">Cậu nhập tên và số báo danh (SBD) để mở lời chúc bí mật nhé!</p>
+
+        <form id="searchForm" onsubmit="return false;" style="margin-top: 15px;">
+          <div class="form-group">
+            <label for="userNameInput">Họ và tên của cậu:</label>
+            <input type="text" id="userNameInput" placeholder="Ví dụ: Lê Bảo Ngọc..." required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="userSbdInput">Số báo danh (SBD):</label>
+            <input type="text" id="userSbdInput" placeholder="Ví dụ: 01, 04, 21, 46..." required autocomplete="off">
+          </div>
+
+          <div id="searchErrorMsg" class="error-msg text-center"></div>
+
+          <button id="btnLookup" type="button" class="cta-btn full-width mt-10">Mở cánh cửa bí mật 💌</button>
+        </form>
+        <p class="privacy-note">🔒 *Hệ thống chỉ ghi nhận tên viết tắt và số báo danh tra cứu.</p>
+      </div>
+    </section>
+
+    <!-- MÀN 3: LỜI CHÚC BÍ MẬT -->
+    <section id="screen3" class="screen">
+      <div class="card glass-card text-center">
+        <h2 class="section-title">Bức Thư Dành Riêng Cho <br><span id="recipientNameDisplay" class="highlight-name">Cậu</span></h2>
+        
+        <div class="envelope-wrapper">
+          <div class="envelope">
+            <div class="envelope-letter">
+              <div class="wishes-list" id="wishesContainer">
+                <!-- 3 lời chúc ngẫu nhiên được nhúng vào đây -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons-group">
+          <button id="btnRefreshWishes" class="pill-btn sec-btn">🔄 Đổi 3 lời chúc khác</button>
+          <button id="btnGoGarden" class="cta-btn">Vào khu vườn hoa nở 🌸</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MÀN 4: KHU VƯỜN LỜI CHÚC -->
+    <section id="screen4" class="screen">
+      <div class="card glass-card text-center">
+        <div class="gift-box" id="interactiveGift">
+          <div class="gift-lid">🎀</div>
+          <div class="gift-body">🎁</div>
+        </div>
+        <p class="gift-hint" id="giftHintTxt">(Nhấp vào hộp quà để mở điều bất ngờ nhé!)</p>
+
+        <div id="finalBlessing" class="final-blessing-content hidden">
+          <h2>Mừng Ngày Phụ Nữ Việt Nam 20/10!</h2>
+          <p>Dù phía trước là những kỳ thi hay chặng đường mới, chúc cậu luôn nở nụ cười rạng ngời, luôn tự tin và mãi là phiên bản tuyệt vời nhất của chính mình.</p>
+          <div class="sparkle-stars">✨ 🌷 ✨ 🪻 ✨</div>
+        </div>
+
+        <button id="btnRestart" class="pill-btn sec-btn mt-20">🌿 Quay lại trang chủ</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CỔNG QUẢN TRỊ BÍ MẬT (EASTER EGG IMPHONG + SBD 67) -->
+  <div id="adminPortalModal" class="modal-backdrop hidden">
+    <div class="modal-box glass-card">
+      <div class="modal-header">
+        <h3>🔒 Cổng Quản Trị Bí Mật</h3>
+        <button id="btnCloseAdminModal" class="close-x">&times;</button>
+      </div>
+
+      <div id="adminAuthArea">
+        <p class="desc">Xác thực quyền quản trị để xem bảng nhật ký:</p>
+        <div class="form-group">
+          <input type="password" id="adminSecretKeyInput" placeholder="Nhập mã xác thực Admin..." autocomplete="off">
+        </div>
+        <div id="adminAuthError" class="error-msg"></div>
+        <button id="btnAdminLogin" class="cta-btn full-width">Xác thực hệ thống 🔑</button>
+      </div>
+
+      <div id="adminDashboardArea" class="hidden">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-num" id="statPageViews">0</span>
+            <span class="stat-lbl">Lượt mở website</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="statSuccessSearches">0</span>
+            <span class="stat-lbl">Lượt tra cứu thành công</span>
+          </div>
+        </div>
+
+        <h4 class="mt-20">Bảng Ghi Nhận Lượt Tra Cứu</h4>
+        <div class="table-container">
+          <table class="minimal-table">
+            <thead>
+              <tr>
+                <th>Tên viết tắt</th>
+                <th>Phương thức</th>
+              </tr>
+            </thead>
+            <tbody id="adminLogsTableBody">
+              <!-- Dữ liệu hiển thị tự động -->
+            </tbody>
+          </table>
+        </div>
+        <button id="btnAdminLogout" class="pill-btn sec-btn mt-20 full-width">Đóng cổng quản trị</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="backend.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
