@@ -1,4 +1,4 @@
-// CẤU HÌNH FIREBASE (Dán config của bạn nếu dùng Firebase thật, nếu chưa có web vẫn chạy tốt ở chế độ mô phỏng)
+// CẤU HÌNH FIREBASE
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
