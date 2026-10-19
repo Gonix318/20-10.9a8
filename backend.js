@@ -80,7 +80,7 @@ window.backendAPI = {
   fetchAdminData: async function(adminPassword) {
     if (!isFirebaseActive || !db || !auth) {
       // Mật khẩu test mặc định khi chưa có Firebase
-      if (adminPassword === "admin2010") {
+      if (adminPassword === "ttdp318") {
         return {
           views: localStorage.getItem("mock_page_views") || "1",
           searches: localStorage.getItem("mock_search_success") || "0",
