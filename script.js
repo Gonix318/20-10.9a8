@@ -92,11 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Tra cứu thành công -> Ghi nhận Tên Viết Tắt và Phương Thức SBD
+    // Tra cứu thành công -> Ghi nhận đủ cả: Tên đã nhập, Tên viết tắt, và SBD
     currentProfile = match;
     const initials = getInitials(nameInput);
     if (window.backendAPI) {
-      window.backendAPI.logSuccessfulSearch(initials, "SBD");
+      window.backendAPI.logSuccessfulSearch(nameInput, initials, sbdInput);
     }
 
     // Hiển thị Màn 3
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     giftBox.style.transform = "scale(1.2) rotate(15deg)";
     setTimeout(() => {
       giftBox.classList.add("hidden");
-      giftHint.classList.add("hidden");
+      if (giftHint) giftHint.classList.add("hidden");
       finalBlessing.classList.remove("hidden");
     }, 300);
   });
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("searchForm").reset();
     document.getElementById("searchErrorMsg").textContent = "";
     giftBox.classList.remove("hidden");
-    giftHint.classList.remove("hidden");
+    if (giftHint) giftHint.classList.remove("hidden");
     finalBlessing.classList.add("hidden");
     showScreen("screen1");
   });
@@ -200,11 +200,16 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("statPageViews").textContent = data.views;
       document.getElementById("statSuccessSearches").textContent = data.searches;
 
+      // Nâng cấp: Đổ dữ liệu đủ 3 cột (Tên đã nhập | Viết tắt | SBD)
       const tbody = document.getElementById("adminLogsTableBody");
       tbody.innerHTML = "";
       data.logs.forEach(row => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td><strong>${row.initials}</strong></td><td>${row.method}</td>`;
+        tr.innerHTML = `
+          <td><strong>${row.fullName || "---"}</strong></td>
+          <td><span style="color:#d81b60; font-weight:700;">${row.initials}</span></td>
+          <td>${row.sbd || row.method || "---"}</td>
+        `;
         tbody.appendChild(tr);
       });
 
