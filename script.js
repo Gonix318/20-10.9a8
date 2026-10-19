@@ -162,10 +162,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminAuthError = document.getElementById("adminAuthError");
   const adminAuthArea = document.getElementById("adminAuthArea");
   const adminDashboardArea = document.getElementById("adminDashboardArea");
+  const btnToggleAdminPass = document.getElementById("btnToggleAdminPass");
+
+  // Xử lý bật/tắt xem mật mã Admin
+  if (btnToggleAdminPass) {
+    btnToggleAdminPass.addEventListener("click", () => {
+      if (adminSecretInput.type === "password") {
+        adminSecretInput.type = "text";
+        btnToggleAdminPass.textContent = "🙈";
+      } else {
+        adminSecretInput.type = "password";
+        btnToggleAdminPass.textContent = "👁️";
+      }
+    });
+  }
 
   btnCloseAdmin.addEventListener("click", () => {
     adminModal.classList.add("hidden");
     adminSecretInput.value = "";
+    adminSecretInput.type = "password";
+    if (btnToggleAdminPass) btnToggleAdminPass.textContent = "👁️";
     adminAuthError.textContent = "";
   });
 
@@ -205,6 +221,8 @@ document.addEventListener("DOMContentLoaded", () => {
     adminDashboardArea.classList.add("hidden");
     adminAuthArea.classList.remove("hidden");
     adminSecretInput.value = "";
+    adminSecretInput.type = "password";
+    if (btnToggleAdminPass) btnToggleAdminPass.textContent = "👁️";
     adminModal.classList.add("hidden");
   });
 
