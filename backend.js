@@ -12,32 +12,39 @@ let db = null;
 let auth = null;
 let isFirebaseActive = false;
 
-// Tải Firebase SDK tự động
-import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js")
-  .then(async (firebaseApp) => {
-    const { initializeApp } = firebaseApp;
-    const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+// Kiểm tra xem đã có API Key thật hay chưa
+const hasRealFirebaseConfig = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
 
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      auth = getAuth(app);
-      isFirebaseActive = true;
-      console.log("🌸 Firebase kết nối thành công!");
+if (hasRealFirebaseConfig) {
+  import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js")
+    .then(async (firebaseApp) => {
+      const { initializeApp } = firebaseApp;
+      const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+
+      try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        isFirebaseActive = true;
+        console.log("🌸 Firebase kết nối thành công!");
+        window.backendAPI.logPageView();
+      } catch (e) {
+        console.warn("Lỗi Firebase -> Dùng Mock LocalStorage");
+        window.backendAPI.logPageView();
+      }
+    })
+    .catch(() => {
       window.backendAPI.logPageView();
-    } catch (e) {
-      console.warn("Chưa gắn Firebase thật -> Đang dùng chế độ Demo cục bộ.");
-      window.backendAPI.logPageView();
-    }
-  })
-  .catch(() => {
-    console.warn("Không tải được Firebase -> Đang dùng chế độ Demo cục bộ.");
-    window.backendAPI.logPageView();
-  });
+    });
+} else {
+  // Chạy ngay chế độ mock, không để trình duyệt chờ import Firebase
+  setTimeout(() => {
+    if (window.backendAPI) window.backendAPI.logPageView();
+  }, 100);
+}
 
 window.backendAPI = {
-  // Đếm lượt mở website
   logPageView: async function() {
     if (!isFirebaseActive || !db) {
       let views = parseInt(localStorage.getItem("mock_page_views") || "0") + 1;
@@ -53,7 +60,6 @@ window.backendAPI = {
     }
   },
 
-  // Ghi nhận lượt tra cứu thành công (Chỉ lưu Tên viết tắt và Phương thức)
   logSuccessfulSearch: async function(initials, method) {
     if (!isFirebaseActive || !db) {
       let logs = JSON.parse(localStorage.getItem("mock_search_logs") || "[]");
@@ -76,10 +82,9 @@ window.backendAPI = {
     }
   },
 
-  // Xác thực quyền Admin phía Backend và tải nhật ký
   fetchAdminData: async function(adminPassword) {
+    // Luôn ưu tiên kiểm tra mật mã test ttdp318 nếu chưa có Firebase thật
     if (!isFirebaseActive || !db || !auth) {
-      // Mật khẩu test mặc định khi chưa có Firebase
       if (adminPassword === "ttdp318") {
         return {
           views: localStorage.getItem("mock_page_views") || "1",
