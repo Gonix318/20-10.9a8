@@ -116,13 +116,13 @@
 
       <div id="adminAuthArea">
         <p class="desc">Xác thực quyền quản trị để xem bảng nhật ký:</p>
-        <div class="form-group">
+        <div class="form-group password-wrapper">
           <input type="password" id="adminSecretKeyInput" placeholder="Nhập mã xác thực Admin..." autocomplete="off">
+          <button type="button" id="btnToggleAdminPass" class="toggle-eye-btn" title="Xem/Ẩn mã">👁️</button>
         </div>
         <div id="adminAuthError" class="error-msg"></div>
         <button id="btnAdminLogin" class="cta-btn full-width">Xác thực hệ thống 🔑</button>
       </div>
-
       <div id="adminDashboardArea" class="hidden">
         <div class="stats-grid">
           <div class="stat-card">
